@@ -1,4 +1,5 @@
 import base64
+
 from django.core.files.base import ContentFile
 from rest_framework import serializers
 from rest_framework.serializers import ValidationError
@@ -32,12 +33,18 @@ class GroupSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    author = serializers.StringRelatedField(read_only=True)
-    post = serializers.PrimaryKeyRelatedField(read_only=True)
+    author = serializers.StringRelatedField
+    post = serializers.PrimaryKeyRelatedField
 
     class Meta:
         fields = '__all__'
         model = Comment
+        read_only_fields = ('author', 'post')
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['author'] = instance.author.username
+        return representation
 
 
 class FollowSerializer(serializers.ModelSerializer):
