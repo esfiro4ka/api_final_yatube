@@ -18,7 +18,10 @@ class Base64ImageField(serializers.ImageField):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    author = serializers.StringRelatedField(read_only=True)
+    author = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='username'
+    )
     image = Base64ImageField(required=False, allow_null=True)
 
     class Meta:
@@ -33,18 +36,15 @@ class GroupSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    author = serializers.StringRelatedField
-    post = serializers.PrimaryKeyRelatedField
+    author = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='username'
+    )
 
     class Meta:
         fields = '__all__'
         model = Comment
-        read_only_fields = ('author', 'post')
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        representation['author'] = instance.author.username
-        return representation
+        read_only_fields = ('post',)
 
 
 class FollowSerializer(serializers.ModelSerializer):
