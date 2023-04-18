@@ -69,3 +69,7 @@ Content-type: application/json
     "group": null
 }
 ```
+
+## Стек технологий
+
+Python 3, Django 2.2.16, Django REST Framework, SQLite3, JWT.
